@@ -1,0 +1,26 @@
+configuring gmail on ubuntu server
+first update the server by using the command
+# apt-get update
+then install sendmail mailutils package on the server
+# apt-get install sendmail mailutils -y
+create authentication file
+cd /etc/mail
+mkdir -m 700 authinfo
+vi gamil
+AuthInfo: "U:root" "I:mdsyd01@gmail.com" "p:sayeedmds"
+
+create hasp map of the file
+makemap ahs gmail < mail
+note: this create gmail.db in the same directory
+
+Add the following lines to sendmail.mc file right above MAILER_DEFINATIONS:
+Got to /etc/mail and open sendmail.mc
+       then Add the following lines to sendmail.mc file right above MAILER_DEFINITIONS:
+	#GMail settings:
+	define(`SMART_HOST',`[smtp.gmail.com]')dnl
+	define(`RELAY_MAILER_ARGS', `TCP $h 587')dnl
+	define(`ESMTP_MAILER_ARGS', `TCP $h 587')dnl
+	define(`confAUTH_OPTIONS', `A p')dnl
+	TRUST_AUTH_MECH(`EXTERNAL DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
+	define(`confAUTH_MECHANISMS', `EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
+	FEATURE(`authinfo',`hash -o /etc/mail/authinfo/gmail.db')dnl
